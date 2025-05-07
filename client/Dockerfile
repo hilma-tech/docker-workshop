@@ -5,15 +5,12 @@ WORKDIR /app/client
 
 # Copy package.json and package-lock.json
 COPY ./client/package.json /package.json
-COPY ./scripts/ ./scripts
 
 # Install dependencies
 RUN --mount=type=cache,id=npm,target=/npm/store npm install  --frozen-lockfile
 
 COPY ./client/ ./
 
-# Build React app
-WORKDIR /app/clients/main
 
 RUN npm run build
 
@@ -27,6 +24,8 @@ COPY ./nginx /etc/nginx
 
 # Copy build files from the 'builder' stage to Nginx server directory
 COPY --from=builder /app/client/dist /usr/share/nginx/html
+COPY --from=builder /app/client/ /app/client
+
 
 # Copy nginx configuration file
 EXPOSE 80
