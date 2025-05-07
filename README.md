@@ -31,7 +31,15 @@ npm run dev
 ## Step 1:
 
 Create a dockerfile for the server:
-It should copy the packages, install dependencies, copy the relevant code, build the img and run the server.
+It should:
+
+- be based on the right node image
+- copy the packages
+- install dependencies
+- copy the relevant code
+- build the img and run the server
+
+don't forget to include the nginx part. It's the same for all apps. If Rivka and Naama forgot to explain about this, nudge them.
 
 build the docker image:
 docker build -f client/Dockerfile -t <name your img> .
