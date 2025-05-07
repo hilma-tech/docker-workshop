@@ -1,5 +1,5 @@
-# Base image
-FROM node:18
+# Base image - this project is using node 18
+FROM node:18 
 
 # Create app directory
 WORKDIR /app/server
@@ -13,8 +13,8 @@ RUN npm install
 # Bundle app source
 COPY ./server ./
 
-# Creates a "dist" folder with the production build
+# Creates a "dist" folder with the  build 
 RUN npm run build
 
-# Start the server using the production build
+# Start the server using the  build
 CMD [ "node", "dist/main.js" ]
