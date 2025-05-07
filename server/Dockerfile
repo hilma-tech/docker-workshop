@@ -1,19 +1,17 @@
 # Base image
 FROM node:18
 
-
-ENV NODE_ENV=development
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app/server
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+COPY /server/package*.json ./package*.json
 
 # Install app dependencies
 RUN npm install
 
 # Bundle app source
-COPY . .
+COPY ./server ./
 
 # Creates a "dist" folder with the production build
 RUN npm run build
