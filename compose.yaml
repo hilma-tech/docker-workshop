@@ -1,23 +1,39 @@
 services:
-  server:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
-
   client:
     build:
-      context: .
-      dockerfile: client/Dockerfile
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_PORT: ${DB_PORT}
-      MYSQL_HOST: ${DB_HOST}
-    volumes:
-      - docker_workshop_mysql_data:/var/lib/mysql/data
+      context: . # Build the client image from the root context
+      dockerfile: client/Dockerfile # Use the Dockerfile located in the client directory
 
+  db:
+    image: mysql:latest # Use the latest official MySQL image
+    # env_file:
+    #   - ./server/.env.development # Load DB credentials and name from the env file
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD} # Set MySQL root password
+      - MYSQL_DATABASE=${DB_NAME} # Auto-create this database on first run
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: . # Build the server image from the root context
+      dockerfile: server/Dockerfile # Use the Dockerfile located in the server directory
+    environment:
+      - DB_HOST=db # Set the DB host to the 'db' service (Docker's internal DNS)
+      - DB_USER=${DB_USER} # Inject DB user from the .env file or shell environment
+      - DB_PASSWORD=${DB_PASSWORD} # Inject DB password
+      - DB_NAME=${DB_NAME} # Inject DB name
+      - DB_PORT=${DB_PORT} # Inject DB port
+      - DB_ENGINE=mysql # Specify the database engine used
+    depends_on:
+      db:
+        condition: service_healthy # Wait for the db service to be healthy before starting
 volumes:
-  docker_workshop_mysql_data:
+  docker_workshop_mysql_data: # Named volume for persisting MySQL data
