@@ -1,0 +1,23 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PORT: ${DB_PORT}
+      MYSQL_HOST: ${DB_HOST}
+    volumes:
+      - docker_workshop_mysql_data:/var/lib/mysql/data
+
+volumes:
+  docker_workshop_mysql_data:

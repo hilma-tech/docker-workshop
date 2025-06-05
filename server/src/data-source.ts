@@ -31,4 +31,6 @@ export function getOptions(): DataSourceOptions {
 if (process.env.MIGRATION) {
   config({ path: join(__dirname, "../.env.development") });
 }
-export const dataSource = process.env.MIGRATION ? new DataSource(getOptions()) : {};
+export const dataSource = process.env.MIGRATION
+  ? new DataSource(getOptions())
+  : {};
