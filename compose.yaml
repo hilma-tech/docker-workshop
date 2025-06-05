@@ -1,3 +1,5 @@
+# to remove old containers- docker compose down -v
+# to run this- docker compose --env-file ./server/.env.development up
 services:
   client:
     build:
@@ -6,8 +8,6 @@ services:
 
   db:
     image: mysql:latest # Use the latest official MySQL image
-    # env_file:
-    #   - ./server/.env.development # Load DB credentials and name from the env file
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD} # Set MySQL root password
       - MYSQL_DATABASE=${DB_NAME} # Auto-create this database on first run
