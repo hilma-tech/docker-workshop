@@ -5,6 +5,10 @@ services:
     build:
       context: . # Build the client image from the root context
       dockerfile: client/Dockerfile # Use the Dockerfile located in the client directory
+    ports:
+      - "80:80"
+    depends_on:
+      - server
 
   db:
     image: mysql:latest # Use the latest official MySQL image
